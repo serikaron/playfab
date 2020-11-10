@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  login-server:
+    image: nginx
+    ports:
+      - "34567:80"
+      - "443:443"
+    volumes:
+      - ../login_server/index.html:/usr/share/nginx/html/index.html
+      - ../login_server/host.key:/etc/nginx/certs/serika_playfab.key
+      - ../login_server/host.cert:/etc/nginx/certs/serika_playfab.cert
+      - ../login_server/nginx.server.conf:/etc/nginx/conf.d/serika.playfab.conf
+    depends_on:
+      - external-server
+
+  external-server:
+    image: external-server
+    build:
+      context: ../
+      dockerfile: scripts/external_server.dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "23456:80"
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: wisdom
+    ports:
+      - "5432:5432"
+    volumes:
+      - .:/tmp
+
+
+  test-client:
+    image: test-client
+    build:
+      context: ../
+      dockerfile: scripts/test_client.dockerfile
+    depends_on:
+      - external-server
