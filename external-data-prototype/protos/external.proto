@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package proto.external;
+option go_package = "proto";
+
+service External {
+    rpc GetUser (GetUserReq) returns (GetUserRsp);
+    rpc SetUser (SetUserReq) returns (SetUserRsp);
+}
+
+message GetUserReq {
+    string id = 1;
+}
+
+message GetUserRsp {
+    string name = 1;
+}
+
+message SetUserReq {
+    string id = 1;
+    string name = 2;
+}
+
+message SetUserRsp {}

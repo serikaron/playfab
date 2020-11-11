@@ -1,14 +1,22 @@
 version: "3.7"
 services:
-  login-server:
+  gateway:
     image: nginx
     ports:
-      - "34567:80"
+      - "80:80"
       - "443:443"
+      - "23456:23456"
+    volumes:
+      - ../gateway/host.key:/etc/nginx/certs/serika_playfab.key
+      - ../gateway/host.cert:/etc/nginx/certs/serika_playfab.cert
+      - ../gateway/nginx.server.conf:/etc/nginx/conf.d/serika.playfab.conf
+    depends_on:
+      - external-server
+
+  login-server:
+    image: nginx
     volumes:
       - ../login_server/index.html:/usr/share/nginx/html/index.html
-      - ../login_server/host.key:/etc/nginx/certs/serika_playfab.key
-      - ../login_server/host.cert:/etc/nginx/certs/serika_playfab.cert
       - ../login_server/nginx.server.conf:/etc/nginx/conf.d/serika.playfab.conf
     depends_on:
       - external-server
@@ -20,8 +28,6 @@ services:
       dockerfile: scripts/external_server.dockerfile
     depends_on:
       - postgres
-    ports:
-      - "23456:80"
 
   postgres:
     image: postgres:13-alpine
@@ -33,10 +39,10 @@ services:
       - .:/tmp
 
 
-  test-client:
-    image: test-client
-    build:
-      context: ../
-      dockerfile: scripts/test_client.dockerfile
-    depends_on:
-      - external-server
+#  test-client:
+#    image: test-client
+#    build:
+#      context: ../
+#      dockerfile: scripts/test_client.dockerfile
+#    depends_on:
+#      - external-server

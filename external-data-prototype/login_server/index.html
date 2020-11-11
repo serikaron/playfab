@@ -25,14 +25,16 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
     </script>
     <script src="https://download.playfab.com/PlayFabClientApi.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 </head>
 <body>
     <p>Facebook Auth Example</p>
     <button onclick="loginWithFacebook()">Log In with Facebook</button>
-    <button onclick="getSensitiveData(12346)" style="visibility: visible">Test</button>
+    <button onclick="getSensitiveData()" style="visibility: visible">Test</button>
     <br>
     <div id="setNameDiv">
         <label for="fname">Your name:</label>
@@ -91,8 +93,8 @@
             $('#setNameDiv').css("visibility", 'hidden');
         })
 
-        const sensitiveHost = "http://playfab.serika.cn:23456";
-        var playfabID = "12345";
+        const sensitiveHost = "https://playfab.serika.cn:23456";
+        var playfabID = "";
         function getSensitiveData() {
             $.get(`${sensitiveHost}/user/get?id=${playfabID}`, onGetSensitiveData);
         }
@@ -109,7 +111,7 @@
         function setName() {
             const name = $('#name').val();
             const data = {"id":playfabID, "name":name};
-            $.post("http://playfab.serika.cn:23456/user/set", JSON.stringify(data), function(data, status){
+            $.post("https://playfab.serika.cn:23456/user/set", JSON.stringify(data), function(data, status){
                 // logLine("Data: " + data + "\nStatus: " + status);
                 getSensitiveData();
             });

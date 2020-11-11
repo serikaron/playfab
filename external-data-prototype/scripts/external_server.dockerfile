@@ -8,8 +8,10 @@ WORKDIR /edp
 COPY go.mod /edp
 RUN go mod download
 
+COPY protos /edp/protos
 COPY external-server /edp/external-server
-RUN go build -o /output edp/external-server
+RUN go generate /edp/external-server &&\
+    go build -o /output /edp/external-server
 
 FROM alpine:3.11 as release
 COPY --from=development /output /ext-server
