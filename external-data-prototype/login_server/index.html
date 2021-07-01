@@ -34,7 +34,10 @@
 <body>
     <p>Facebook Auth Example</p>
     <button onclick="loginWithFacebook()">Log In with Facebook</button>
-    <button onclick="getSensitiveData()" style="visibility: visible">Test</button>
+    <br><label>CustomId:</label>
+    <input type="text" id="customID" name="customID" value="">
+    <button onclick="loginWithCustomID()">Log In with Custom id</button>
+    <button onclick="getSensitiveData()" style="visibility: hidden">Test</button>
     <br>
     <div id="setNameDiv">
         <label for="fname">Your name:</label>
@@ -42,6 +45,14 @@
         <button id="setBtn" onclick="setName()">set name</button>
     </div>
     <script>
+        function loginWithCustomID() {
+            const customID = $("#customID").val();
+            // logLine(customID);
+            PlayFabClientSDK.LoginWithCustomID({
+                CustomId: customID,
+                TitleId: "512C4",
+            }, onPlayFabResponse);
+        }
         // This method is invoked when you press the button
         function loginWithFacebook() {
             logLine("Logging in via Facebook...");
@@ -74,8 +85,9 @@
         // Handles response from playfab.
         function onPlayFabResponse(response, error) {
             if (response) {
-                logLine("Response: " + JSON.stringify(response));
+                // logLine("Response: " + JSON.stringify(response));
                 playfabID = response.data.PlayFabId;
+                logLine("PlayFabId: " + playfabID);
                 getSensitiveData();
             }
             if (error)
@@ -111,7 +123,7 @@
         function setName() {
             const name = $('#name').val();
             const data = {"id":playfabID, "name":name};
-            $.post("https://playfab.serika.cn:23456/user/set", JSON.stringify(data), function(data, status){
+            $.post(`${sensitiveHost}/user/set`, JSON.stringify(data), function(data, status){
                 // logLine("Data: " + data + "\nStatus: " + status);
                 getSensitiveData();
             });

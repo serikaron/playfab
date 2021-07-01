@@ -29,7 +29,7 @@ func (c *Controller) getParamFrom(request *http.Request, key string) string {
 }
 
 func (c *Controller) getUser(writer http.ResponseWriter, request *http.Request) {
-	//writer.Header().Set("Access-Control-Allow-Origin", "http://playfab.serika.cn:34567")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 	id := c.getParamFrom(request, "id")
 	name, err := c.dao.GetUser(id)
 	if err != nil {
@@ -49,7 +49,7 @@ func (r *setUserRequest) String() string {
 }
 
 func (c *Controller) setUser(writer http.ResponseWriter, request *http.Request) {
-	//writer.Header().Set("Access-Control-Allow-Origin", "http://playfab.serika.cn:34567")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 	//log.Println("setUser")
 	if request.Method != "POST" {
 		log.Println(fmt.Sprintf("not a post method, %s", request.Method))

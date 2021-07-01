@@ -10,22 +10,20 @@ services:
       - ../gateway/host.key:/etc/nginx/certs/serika_playfab.key
       - ../gateway/host.cert:/etc/nginx/certs/serika_playfab.cert
       - ../gateway/nginx.server.conf:/etc/nginx/conf.d/serika.playfab.conf
-    depends_on:
-      - external-server
 
   login-server:
     image: nginx
     volumes:
       - ../login_server/index.html:/usr/share/nginx/html/index.html
       - ../login_server/nginx.server.conf:/etc/nginx/conf.d/serika.playfab.conf
-    depends_on:
-      - external-server
 
   external-server:
     image: external-server
     build:
       context: ../
       dockerfile: scripts/external_server.dockerfile
+    ports:
+      - "23456:80"
     depends_on:
       - postgres
 
